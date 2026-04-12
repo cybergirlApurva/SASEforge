@@ -1,0 +1,5 @@
+.dropbox.com
+.wetransfer.com
+.pastebin.com
+.torrent.com
+.thepiratebay.org

@@ -1,0 +1,20 @@
+networks:
+  dmz-network:
+    external: true
+  internal-network:
+    external: true
+
+services:
+  squid:
+    image: ubuntu/squid:latest
+    container_name: squid-proxy
+    networks:
+      - dmz-network
+      - internal-network
+    ports:
+      - "3128:3128"
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf
+      - ./blocked-sites.txt:/etc/squid/blocked-sites.txt
+      - ./logs:/var/log/squid
+    restart: unless-stopped
