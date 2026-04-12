@@ -74,7 +74,7 @@ SASEforge/
 - [x] Phase 1 - Network foundation (Docker + VLANs)
 - [x] Phase 2 - Perimeter security (pfSense + WireGuard + Suricata)
 - [x] Phase 3 - Proxy and CASB (Squid + SSL inspection)
-- [ ] Phase 4 - Identity and ZTNA (Keycloak + OPA)
+- [x] Phase 4 - Identity and ZTNA (Keycloak + OPA)
 - [ ] Phase 5 - SIEM and attack simulation (ELK + Kibana)
 - [ ] Phase 6 - Documentation and demo video
 ---
