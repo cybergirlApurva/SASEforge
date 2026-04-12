@@ -1,0 +1,38 @@
+version: '3.8'
+
+networks:
+  dmz-network:
+    external: true
+  internal-network:
+    external: true
+  db-network:
+    external: true
+
+services:
+
+  dmz-server:
+    image: nginx:alpine
+    container_name: dmz-server
+    networks:
+      - dmz-network
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  app-server:
+    image: nginx:alpine
+    container_name: app-server
+    networks:
+      - internal-network
+    restart: unless-stopped
+
+  db-server:
+    image: postgres:15-alpine
+    container_name: db-server
+    networks:
+      - db-network
+    environment:
+      POSTGRES_PASSWORD: securepass123
+      POSTGRES_DB: saseforge_db
+    restart: unless-stopped
+
