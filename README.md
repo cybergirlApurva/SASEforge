@@ -75,7 +75,7 @@ SASEforge/
 - [x] Phase 2 - Perimeter security (pfSense + WireGuard + Suricata)
 - [x] Phase 3 - Proxy and CASB (Squid + SSL inspection)
 - [x] Phase 4 - Identity and ZTNA (Keycloak + OPA)
-- [ ] Phase 5 - SIEM and attack simulation (ELK + Kibana)
+- [x] Phase 5 - SIEM and attack simulation (ELK + Kibana)
 - [ ] Phase 6 - Documentation and demo video
 ---
 
