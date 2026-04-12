@@ -1,0 +1,18 @@
+networks:
+  internal-network:
+    external: true
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    networks:
+      - internal-network
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=SASEforge@2025
+      - KC_HTTP_ENABLED=true
+    ports:
+      - "8081:8080"
+    command: start-dev
+    restart: unless-stopped
