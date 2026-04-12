@@ -1,0 +1,17 @@
+networks:
+  dmz-network:
+    external: true
+
+services:
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: suricata
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    volumes:
+      - ./rules:/etc/suricata/rules
+      - ./logs:/var/log/suricata
+    command: -i eth0 --init-vars
+    restart: unless-stopped
