@@ -1,0 +1,27 @@
+networks:
+  dmz-network:
+    external: true
+
+services:
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    networks:
+      - dmz-network
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - SERVERURL=auto
+      - SERVERPORT=51820
+      - PEERS=3
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=10.13.13.0
+    volumes:
+      - ./config:/config
+    ports:
+      - 51820:51820/udp
+    restart: unless-stopped
