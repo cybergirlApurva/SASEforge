@@ -49,7 +49,7 @@ A hands-on implementation of a **Secure Access Service Edge (SASE)** security pl
 SASEforge/
 ├── README.md
 ├── architecture/
-│   └── diagram.png
+│   └── architecture.svg
 ├── phase1-network/
 │   └── docker-compose.yml
 ├── phase2-perimeter/
@@ -126,7 +126,7 @@ Each phase folder contains its own setup instructions. Start with `phase1-networ
 
 ## Why SASE?
 
-SASE (Secure Access Service Edge) is the dominant enterprise security framework in 2025, combining network and security functions into a unified cloud-delivered model. This project demonstrates hands-on implementation of every major SASE component — making it directly relevant to roles in cloud security, network security, and SOC engineering.
+This project demonstrates hands-on implementation of every major SASE component in a working lab environment.
 
 ---
 
@@ -139,4 +139,4 @@ SASE (Secure Access Service Edge) is the dominant enterprise security framework 
 
 ## License
 
-MIT License — feel free to use this as a reference for your own learning.
+MIT License
