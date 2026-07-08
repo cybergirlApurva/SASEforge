@@ -8,23 +8,17 @@ A hands-on implementation of a **Secure Access Service Edge (SASE)** security pl
 
 ## Architecture Overview
 
-```
-[ Remote Users / Internet ]
-         |
-   [ WireGuard VPN ]
-         |
-   [ pfSense Firewall ]
-         |
-   [ Suricata IDS/IPS ]
-         |
-   [ Squid Proxy + CASB Rules ]
-         |
-   [ Keycloak IdP + OPA (ZTNA) ]
-         |
-   [ Internal Resources: DMZ / App / DB ]
-         |
-   [ ELK Stack - SIEM + Kibana Dashboard ]
-```
+![SASEforge network architecture](architecture/network-diagram.png)
+
+Three isolated Docker bridge networks simulate enterprise segmentation:
+
+| Network | Subnet | Purpose |
+|---|---|---|
+| `dmz-network` | 10.0.1.0/24 | Public-facing nginx server, exposed on port 8080 |
+| `internal-network` | 10.0.2.0/24 | Internal application server, no direct external access |
+| `db-network` | 10.0.3.0/24 | PostgreSQL database, restricted to internal access only |
+
+Traffic flows inward through the perimeter layer (WireGuard, pfSense, Suricata), through the proxy/CASB layer (Squid), through the identity layer (Keycloak, OPA), and reaches internal resources. Every layer ships its logs to the ELK stack.
 
 ---
 
@@ -49,7 +43,7 @@ A hands-on implementation of a **Secure Access Service Edge (SASE)** security pl
 SASEforge/
 ├── README.md
 ├── architecture/
-│   └── architecture.svg
+│   └── network-diagram.png
 ├── phase1-network/
 │   └── docker-compose.yml
 ├── phase2-perimeter/
@@ -62,8 +56,13 @@ SASEforge/
 │   └── opa-policies/
 ├── phase5-siem/
 │   └── elk/
+├── scripts/
+│   ├── attack_simulation.py
+│   ├── check_siem_ingestion.py
+│   └── validate_opa_policy.py
 └── docs/
-    └── threat-model.md
+    ├── threat-model.md
+    └── screenshots/
 ```
 
 ---
@@ -76,16 +75,11 @@ SASEforge/
 - [x] Phase 3 - Proxy and CASB (Squid + SSL inspection)
 - [x] Phase 4 - Identity and ZTNA (Keycloak + OPA)
 - [x] Phase 5 - SIEM and attack simulation (ELK + Kibana)
-- [x] Phase 6 - Documentation and demo video
+- [ ] Phase 6 - Documentation and demo video
+
 ---
 
 ## Tech Stack
-
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-![pfSense](https://img.shields.io/badge/pfSense-212121?style=flat&logo=pfsense&logoColor=white)
-![WireGuard](https://img.shields.io/badge/WireGuard-88171A?style=flat&logo=wireguard&logoColor=white)
-![Elastic](https://img.shields.io/badge/ELK_Stack-005571?style=flat&logo=elastic&logoColor=white)
-![Keycloak](https://img.shields.io/badge/Keycloak-4D4D4D?style=flat&logo=keycloak&logoColor=white)
 
 **Tools:** pfSense, WireGuard, Suricata, Squid, mitmproxy, Keycloak, Open Policy Agent, Elasticsearch, Logstash, Kibana
 
@@ -98,10 +92,35 @@ SASEforge/
 Threats are mapped to the [MITRE ATT&CK](https://attack.mitre.org/) framework. See [`docs/threat-model.md`](docs/threat-model.md) for full details.
 
 Key attack scenarios simulated:
+
 - Port scanning and reconnaissance (T1046)
 - Brute force login attempts (T1110)
 - Unauthorized cloud app access (T1567)
 - Lateral movement across VLANs (T1021)
+
+---
+
+## Evidence
+
+### Network segmentation
+Three isolated networks confirmed running via `docker ps`:
+
+![docker network segmentation](docs/screenshots/docker-network-segmentation.png)
+
+### Zero-trust policy enforcement
+OPA correctly denies an authenticated employee access to the restricted database:
+
+```bash
+curl -s -X POST http://localhost:8181/v1/data/saseforge/authz/allow \
+  -H "Content-Type: application/json" \
+  -d '{"input": {"user": {"authenticated": true, "role": "employee"}, "resource": "restricted-db"}}'
+# {"result":false}
+```
+
+![opa policy validation](docs/screenshots/opa-policy-validation.png)
+
+### Detection layer
+*(in progress — attack simulation → Suricata alert → Kibana dashboard, see `scripts/attack_simulation.py`)*
 
 ---
 
@@ -126,17 +145,17 @@ Each phase folder contains its own setup instructions. Start with `phase1-networ
 
 ## Why SASE?
 
-This project demonstrates hands-on implementation of every major SASE component in a working lab environment.
+SASE (Secure Access Service Edge) combines network and security functions into a unified cloud-delivered model, replacing the old perimeter-based approach as more traffic moves to cloud and remote work. This project demonstrates hands-on implementation of every major SASE component in a working lab environment.
 
 ---
 
 ## Author
 
-**Apurva** | MS Computer Networks  
+**Apurva** | MS Computer Networks
 [GitHub](https://github.com/cybergirlApurva)
 
 ---
 
 ## License
 
-MIT License
+MIT License — feel free to use this as a reference for your own learning.
