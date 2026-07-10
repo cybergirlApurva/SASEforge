@@ -120,7 +120,7 @@ curl -s -X POST http://localhost:8181/v1/data/saseforge/authz/allow \
 ![opa policy validation](docs/screenshots/opa-policy-validation.png)
 
 ### Detection layer
-*(in progress — attack simulation → Suricata alert → Kibana dashboard, see `scripts/attack_simulation.py`)*
+*Suricata rules fire on simulated attacks and forward alerts to Kibana via Logstash. See scripts/attack_simulation.py for the full simulation script.*
 
 ---
 
